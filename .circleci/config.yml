@@ -1,0 +1,69 @@
+version: 2
+
+jobs:
+  checkout:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project
+  build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - attach_workspace:
+          at: ~/
+      - setup_remote_docker:
+          version: 20.10.7
+          docker_layer_caching: true
+      - run:
+          name: Building lumen image
+          command: docker-compose build lumen9
+      - run:
+          name: Saving image
+          command: docker save -o ~/lumen9 project_lumen9
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - lumen9
+  publish:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - attach_workspace:
+          at: ~/
+      - setup_remote_docker:
+          version: 20.10.7
+          docker_layer_caching: true
+      - run:
+          name: Loading lumen image
+          command: docker load -i ~/lumen9
+      - run:
+          name: Logging into dockerhub
+          command: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+      - run:
+          name: Publishing image
+          command: |
+            docker tag project_lumen9 ${DOCKER_USERNAME}/lumen:9
+            docker tag project_lumen9 ${DOCKER_USERNAME}/lumen:latest
+            docker push ${DOCKER_USERNAME}/lumen:9
+            docker push ${DOCKER_USERNAME}/lumen:latest
+
+workflows:
+  version: 2
+  build-and-publish:
+    jobs:
+      - checkout
+      - build:
+          requires:
+            - checkout
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
