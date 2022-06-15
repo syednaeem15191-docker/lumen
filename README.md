@@ -2,16 +2,10 @@
 
 #### `docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}`
 
-##### push mysql 5
-* `docker-compose up --build -d mysql5`
-* `docker tag mysql_mysql5 syednaeem15191/mysql:5`
-* `docker push syednaeem15191/mysql:5`
-* `docker-compose stop`
-
-##### push mysql 8
-* `docker-compose up --build -d mysql8`
-* `docker tag mysql_mysql8 syednaeem15191/mysql:8`
-* `docker push syednaeem15191/mysql:8`
-* `docker tag mysql_mysql8 syednaeem15191/mysql:latest`
-* `docker push syednaeem15191/mysql:latest`
+##### push lumen 9
+* `docker-compose up --build -d lumen9`
+* `docker tag mysql_lumen9 syednaeem15191/lumen:9`
+* `docker push syednaeem15191/lumen:9`
+* `docker tag mysql_mysql8 syednaeem15191/lumen:latest`
+* `docker push syednaeem15191/lumen:latest`
 * `docker-compose stop`
