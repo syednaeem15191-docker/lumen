@@ -21,7 +21,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Building lumen image
-          command: docker-compose build lumen9
+          command: docker-compose build lumen9 --no-cache
       - persist_to_workspace:
           root: ~/
           paths:
