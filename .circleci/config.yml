@@ -22,13 +22,14 @@ jobs:
       - run:
           name: Building lumen image
           command: docker-compose build lumen9
-      - run:
-          name: Saving image
-          command: docker save -o ~/lumen9 project_lumen9
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - lumen9
+#      - run:
+#          name: Saving image
+#          command: docker save -o ~/lumen9 project_lumen9
+#      - persist_to_workspace:
+#          root: ~/
+#          paths:
+#            - project
+#            - lumen9
   publish:
     docker:
       - image: cimg/base:stable
@@ -39,18 +40,24 @@ jobs:
           version: 20.10.7
           docker_layer_caching: true
       - run:
-          name: Loading lumen image
-          command: docker load -i ~/lumen9
-      - run:
-          name: Logging into dockerhub
-          command: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-      - run:
-          name: Publishing image
-          command: |
-            docker tag project_lumen9 ${DOCKER_USERNAME}/lumen:9
-            docker tag project_lumen9 ${DOCKER_USERNAME}/lumen:latest
-            docker push ${DOCKER_USERNAME}/lumen:9
-            docker push ${DOCKER_USERNAME}/lumen:latest
+          name: docker image ls
+          command: docker image ls
+#      - run:
+#          name: Loading lumen image
+#          command: docker load -i ~/lumen9
+#      - run:
+#          name: Logging into dockerhub
+#          command: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+#      - run:
+#          name: Publishing image
+#          command: |
+#            docker tag project_lumen9 ${DOCKER_USERNAME}/lumen:9
+#            docker tag project_lumen9 ${DOCKER_USERNAME}/lumen:latest
+#            docker push ${DOCKER_USERNAME}/lumen:9
+#            docker push ${DOCKER_USERNAME}/lumen:latest
+#      - run:
+#          name: Remove dangling images
+#          command: docker image prune -a -f
 
 workflows:
   version: 2
