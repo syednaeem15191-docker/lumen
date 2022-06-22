@@ -39,4 +39,4 @@ jobs:
         push: true
         tags: syednaeem15191/lumen:9, syednaeem15191/lumen:latest
     - name: Clear docker images
-        run: docker image rm syednaeem15191/lumen
+      run: docker image rm syednaeem15191/lumen
