@@ -1,0 +1,67 @@
+name: Build images
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  checkout:
+    name: Checkout
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Persist workspace
+      uses: actions/upload-artifact@v3
+      with:
+        name: workspace
+        path: ./
+  lumen9:
+    name: Building lumen9
+    needs: checkout
+    runs-on: ubuntu-latest
+    steps:
+    - name: Attach workspace
+      uses: actions/download-artifact@v3
+      with:
+        name: workspace
+    - name: Building lumen image
+      uses: docker/build-push-action@v3
+      with:
+        context: ./lumen9
+        push: false
+        tags: [syednaeem15191/lumen:9, syednaeem15191/lumen:latest]
+#    - name: Save image
+#      run: |
+#        mkdir ~/images
+#        docker save -o ~/images/mysql5 ${{ secrets.DOCKERHUB_USERNAME }}/mysql:5
+    - name: Persist images
+      uses: actions/upload-artifact@v3
+      with:
+        name: workspace
+        path: ./
+  publish:
+    name: Publish
+    needs: [lumen9]
+    runs-on: ubuntu-latest
+    steps:
+#    - name: Attach images
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: images
+#        path: ~/images
+#    - name: Load images
+#      run: |
+#        docker load -i ~/images/mysql5
+#        docker load -i ~/images/mysql8
+    - name: docker image ls
+      run: docker image ls
+    - name: Remove dangling images
+      run: docker image prune -a -f
+#     - name: Login to Docker Hub
+#       uses: docker/login-action@v2
+#       with:
+#         username: ${{ secrets.DOCKERHUB_USERNAME }}
+#         password: ${{ secrets.DOCKERHUB_TOKEN }}
