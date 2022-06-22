@@ -25,10 +25,10 @@ jobs:
 #      - run:
 #          name: Saving image
 #          command: docker save -o ~/lumen9 project_lumen9
-#      - persist_to_workspace:
-#          root: ~/
-#          paths:
-#            - project
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project
 #            - lumen9
   publish:
     docker:
