@@ -10,7 +10,7 @@ jobs:
           root: ~/
           paths:
             - project
-  build:
+  build_lumen9:
     docker:
       - image: cimg/base:stable
     steps:
@@ -21,12 +21,15 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Building lumen image
-          command: docker-compose build lumen9 --no-cache
+          command: docker-compose build lumen9
+      - run:
+          name: Saving image
+          command: docker save -o ~/lumen9 project_lumen9
       - persist_to_workspace:
           root: ~/
           paths:
-            - project
-  publish:
+            - lumen9
+  publish_lumen9:
     docker:
       - image: cimg/base:stable
     steps:
@@ -35,6 +38,9 @@ jobs:
       - setup_remote_docker:
           version: 20.10.7
           docker_layer_caching: true
+      - run:
+          name: Loading image
+          command: docker load -i ~/lumen9
       - run:
           name: Logging into dockerhub
           command: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
@@ -54,12 +60,12 @@ workflows:
   build-and-publish:
     jobs:
       - checkout
-      - build:
+      - build_lumen9:
           requires:
             - checkout
-      - publish:
+      - publish_lumen9:
           requires:
-            - build
+            - build_lumen9
           filters:
             branches:
               only:
