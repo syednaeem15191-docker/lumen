@@ -10,4 +10,4 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 # |  |  |  |  |
 # *  *  *  *  * user-name command-to-be-executed
 
-* * * * * root php /var/www/project/artisan schedule:run >> /dev/null 2>&1
+* * * * * root php /var/www/project/artisan schedule:run >> /var/www/project/storage/logs/scheduler.log 2>&1
